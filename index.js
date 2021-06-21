@@ -14,22 +14,14 @@ const uniswapRouterAccount = process.env.UNISWAP_ADDRESS; // the address of the 
 const account = "0xFcd300AaFE1fDB3166cd1A3B46463144fc2D46ad";
 
 async function main() {
-  const ABI = await fetch(
-    `https://api.etherscan.io/api?module=contract&action=getabi&address=${contract}&apikey=${apikey}`
-  )
-    .then((res) => res.json())
-    .then((body) => {
-      if (body.status === "1") {
-        const res = JSON.parse(body.result);
-        return res;
-      }
-    });
-
   const { providedUSD, ethUsd, providedETH } = await getTokenData();
+
   let currentValueInUSD = await getDataAboutThePool();
 
   const couldBeTheValue = providedETH * ethUsd + providedUSD;
+
   let impermanent_loss = (couldBeTheValue - currentValueInUSD).toFixed(4);
+
   let impermanent_loss_percent = (couldBeTheValue / currentValueInUSD).toFixed(
     4
   );
@@ -38,6 +30,7 @@ async function main() {
     `The impermanent loss is:\x1b[32m ${impermanent_loss}\x1b[37m USD, and \x1b[32m${impermanent_loss_percent}%\x1b[37m`
   );
 }
+
 main();
 
 //Helper functions
@@ -51,7 +44,17 @@ async function getDecimal(contract, address) {
 }
 
 //
-async function getDataAboutThePool(ABI) {
+async function getDataAboutThePool() {
+  const ABI = await fetch(
+    `https://api.etherscan.io/api?module=contract&action=getabi&address=${contract}&apikey=${apikey}`
+  )
+    .then((res) => res.json())
+    .then((body) => {
+      if (body.status === "1") {
+        const res = JSON.parse(body.result);
+        return res;
+      }
+    });
   let uniswapLPContract = new Contract(ABI, contract);
   if (uniswapLPContract) {
     let totalSupply = await uniswapLPContract.methods
