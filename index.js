@@ -123,8 +123,7 @@ async function getTokenData() {
   )
     .then((res) => res.json())
     .then((body) => {
-      const { result } = body;
-      let transactions = result.slice();
+      let transactions = body.result;
       let providedUSDTxn = transactions.find(
         (transaction) => transaction.from === account.toLowerCase()
       );
