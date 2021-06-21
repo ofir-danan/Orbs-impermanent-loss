@@ -11,7 +11,7 @@ Contract.setProvider(provider);
 const apikey = process.env.API_KEY; // to access etherscan API
 const contract = process.env.CONTRACT; // contract address
 const uniswapRouterAccount = process.env.UNISWAP_ADDRESS; // the address of the pool
-const account = "0xFcd300AaFE1fDB3166cd1A3B46463144fc2D46ad";
+const account = process.env.ACCOUNT;
 
 async function main() {
   const { providedUSD, ethUsd, providedETH } = await getTokenData();
